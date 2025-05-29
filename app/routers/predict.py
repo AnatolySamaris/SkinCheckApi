@@ -26,6 +26,32 @@ async def make_prediction(
     localization: str = Form(...),
 ):
     try:
+        # raise Exception("ERROR") # Для имитации непредвиденной ошибки сервера
+        if not image:
+            return {
+                "ok": False,
+                "status": 400,
+                "error": "Требуется прикрепить изображение!"
+            }
+        if not gender:
+            return {
+                "ok": False,
+                "status": 400,
+                "error": "Заполните обязательное поле \"Пол\"!"
+            }
+        if not birthdate:
+            return {
+                "ok": False,
+                "status": 400,
+                "error": "Заполните обязательное поле \"Дата рождения\"!"
+            }
+        if not localization:
+            return {
+                "ok": False,
+                "status": 400,
+                "error": "Заполните обязательное поле \"Локализация\"!"
+            }
+
         # Валидация даты рождения
         try:
             birth_date_obj = datetime.fromisoformat(birthdate)
@@ -33,13 +59,13 @@ async def make_prediction(
                 return {
                     "ok": False,
                     "status": 400,
-                    "error": "Birth date cannot be in the future"
+                    "error": "Дата рождения не может быть в будущем"
                 }
         except ValueError:
             return {
                 "ok": False,
                 "status": 400,
-                "error": "Invalid date format. Use ISO format (YYYY-MM-DD)"
+                "error": "Неправильный формат даты. Используйте формат ДД.ММ.ГГГГ"
             }
 
         # Обработка изображения
